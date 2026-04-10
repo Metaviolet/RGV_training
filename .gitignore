@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Next.js build & dev
+.next/
+out/
+build/
+dist/
+
+# Turbopack / tooling cache
+.turbo/
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Debug / OS
+.DS_Store
+*.pem
+
+# Env (local secrets)
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# Testing / coverage
+coverage/

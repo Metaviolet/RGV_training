@@ -138,9 +138,9 @@ export async function upsertCoachClientAction(_: CoachClientFormState, formData:
       metadata: { email: values.email }
     });
 
-    revalidatePath(`/${locale}/coach/clients`);
+    revalidatePath(`/${locale}/clients`);
     revalidatePath(`/${locale}/coach/dashboard`);
-    redirect(`/${locale}/coach/clients`);
+    redirect(`/${locale}/clients`);
   }
 
   const { data: existingProfile } = await supabase
@@ -228,7 +228,7 @@ export async function upsertCoachClientAction(_: CoachClientFormState, formData:
     coachProfileName: profile.full_name
   });
 
-  revalidatePath(`/${locale}/coach/clients`);
+  revalidatePath(`/${locale}/clients`);
   revalidatePath(`/${locale}/coach/dashboard`);
-  redirect(`/${locale}/coach/clients/${createdClient.id}/edit?created=1`);
+  redirect(`/${locale}/clients/${createdClient.id}/edit?created=1`);
 }

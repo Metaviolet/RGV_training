@@ -3,8 +3,9 @@
 import { useActionState } from 'react';
 import { signInAction } from '@/lib/auth/actions';
 import { AppLocale } from '@/i18n/routing';
+import type { AuthActionState } from '@/types/app';
 
-const initialState = {};
+const initialState: AuthActionState = {};
 
 export function LoginForm({
   labels,

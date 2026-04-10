@@ -5,7 +5,12 @@ import { updateProfileAction } from '@/lib/auth/actions';
 import { Profile } from '@/types/app';
 import { AppLocale } from '@/i18n/routing';
 
-const initialState = {};
+const initialState = {error: undefined, success: undefined};
+
+type ProfileFormState = {
+  error?: string;
+  success?: string;
+};
 
 export function ProfileForm({
   profile,

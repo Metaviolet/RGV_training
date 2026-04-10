@@ -36,12 +36,15 @@ export async function getCoachClientFormData(profileId: string, clientId: string
 
   if (!data) return null;
 
+  const profile = Array.isArray(data.profiles) ? data.profiles[0] : data.profiles;
+  if (!profile) return null;
+
   return {
     clientId: data.id,
-    fullName: data.profiles.full_name ?? '',
-    email: data.profiles.email ?? '',
-    phone: data.profiles.phone ?? '',
-    language: data.profiles.language ?? 'es',
+    fullName: profile.full_name ?? '',
+    email: profile.email ?? '',
+    phone: profile.phone ?? '',
+    language: profile.language ?? 'es',
     dateOfBirth: data.date_of_birth ?? '',
     sex: data.sex ?? 'prefer_not_to_say',
     heightCm: data.height_cm?.toString() ?? '',

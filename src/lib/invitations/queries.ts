@@ -69,6 +69,9 @@ export async function getInvitationForPage(invitationId: string, token: string) 
 
   const isExpired = new Date(data.expires_at).getTime() < Date.now();
 
+  const clientRow = Array.isArray(data.clients) ? data.clients[0] : data.clients;
+  const profile = clientRow && (Array.isArray(clientRow.profiles) ? clientRow.profiles[0] : clientRow.profiles);
+
   return {
     id: data.id,
     email: data.email,
@@ -76,7 +79,7 @@ export async function getInvitationForPage(invitationId: string, token: string) 
     acceptedAt: data.accepted_at,
     revokedAt: data.revoked_at,
     isExpired,
-    clientName: data.clients.profiles.full_name as string,
-    preferredLanguage: (data.clients.profiles.language as 'en' | 'es' | null) ?? 'es'
+    clientName: (profile?.full_name as string) ?? '',
+    preferredLanguage: (profile?.language as 'en' | 'es' | null) ?? 'es'
   };
 }

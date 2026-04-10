@@ -19,7 +19,7 @@ const messages = {
     missingPlan: 'No active plan is available for today.',
     invalidPlan: 'This plan is not available for today.',
     noteRequired: 'Add a short note when you skip or change an item.',
-    saveFailed: 'We could not save today's check-in.',
+    saveFailed: 'We could not save today check-in.',
     saved: 'Saved'
   },
   es: {

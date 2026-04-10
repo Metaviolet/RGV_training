@@ -76,6 +76,11 @@ async function createInvitationRecord({ locale, clientId, coachId, coachProfileN
     throw new Error('Client not found.');
   }
 
+  const clientProfile = Array.isArray(client.profiles) ? client.profiles[0] : client.profiles;
+  if (!clientProfile) {
+    throw new Error('Client profile not found.');
+  }
+
   await supabase
     .from('client_invitations')
     .update({ revoked_at: new Date().toISOString() })
@@ -93,7 +98,7 @@ async function createInvitationRecord({ locale, clientId, coachId, coachProfileN
     .insert({
       client_id: clientId,
       coach_id: coachId,
-      email: client.profiles.email,
+      email: clientProfile.email,
       token_digest: tokenDigest,
       expires_at: expiresAt
     })
@@ -105,12 +110,12 @@ async function createInvitationRecord({ locale, clientId, coachId, coachProfileN
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-  const preferredLocale = (client.profiles.language as AppLocale | null) ?? locale;
+  const preferredLocale = (clientProfile.language as AppLocale | null) ?? locale;
   const inviteUrl = `${appUrl}/${preferredLocale}/invite/${invitation.id}?token=${rawToken}`;
   const emailCopy = buildInviteCopy({
     locale: preferredLocale,
     coachName: coachProfileName,
-    clientName: client.profiles.full_name,
+    clientName: clientProfile.full_name,
     inviteUrl,
     expiresAt
   });
@@ -120,7 +125,7 @@ async function createInvitationRecord({ locale, clientId, coachId, coachProfileN
     preferredLocale,
     emailSubject: emailCopy.subject,
     emailBody: emailCopy.body,
-    clientEmail: client.profiles.email
+    clientEmail: clientProfile.email
   };
 }
 
@@ -206,7 +211,13 @@ export async function acceptInvitationAction(_: InvitationActionState, formData:
 
   try {
     const admin = createAdminClient();
-    const userId = invitation.clients.profiles.auth_user_id as string;
+    const invitationClient = Array.isArray(invitation.clients) ? invitation.clients[0] : invitation.clients;
+    const invitationProfile =
+      invitationClient && (Array.isArray(invitationClient.profiles) ? invitationClient.profiles[0] : invitationClient.profiles);
+    const userId = invitationProfile?.auth_user_id as string | undefined;
+    if (!userId) {
+      return { error: locale === 'es' ? 'No se pudo cargar la cuenta del cliente.' : 'Could not load the client account.' };
+    }
     const { error: updateError } = await admin.auth.admin.updateUserById(userId, {
       password,
       email_confirm: true,

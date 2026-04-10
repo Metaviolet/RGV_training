@@ -8,9 +8,10 @@ export default async function CoachLayout({
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: AppLocale }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  const locale = localeParam as AppLocale;
   await requireRole(locale, 'coach');
 
   return (
